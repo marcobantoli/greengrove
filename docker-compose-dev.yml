@@ -5,7 +5,7 @@ services:
       context: frontend
       target: development
     ports:
-      - 3000:3000
+      - ${REACT_LOCAL_PORT}:${REACT_DOCKER_PORT}
     networks:
       - react-spring
     depends_on:
@@ -16,11 +16,11 @@ services:
       context: rest-service
       target: development
     ports:
-      - '8000:8000'
-      - '8080:8080'
+      - ${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}
     environment:
-      - SERVER_PORT=${SERVER_PORT}
-      - MYSQL_URL=${MYSQL_URL}
+      - SPRING_DATASOURCE_URL=${MYSQL_URL}
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - ./rest-service/:/app
     depends_on:
@@ -32,7 +32,7 @@ services:
   mysqlserver:
     image: mysql:8.0
     ports:
-      - '3306:3306'
+      - ${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_ALLOW_EMPTY_PASSWORD=${MYSQL_ALLOW_EMPTY_PASSWORD}
