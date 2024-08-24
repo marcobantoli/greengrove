@@ -1,7 +1,16 @@
 package com.example.restservice.user;
 
 import jakarta.persistence.*;
+
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
@@ -11,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
-public class User {
+public class User implements UserDetails {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,13 +56,50 @@ public class User {
     @Column(length = 100)
     private String country;
     
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date createdAt;
     
+    @UpdateTimestamp
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date updatedAt;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
     // Getters and Setters
 }
