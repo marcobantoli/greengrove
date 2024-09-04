@@ -1,10 +1,22 @@
+import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import Card from '../components/Card';
 
 export default function Home() {
   const events = useLoaderData().data;
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const listEvents = events.map((event) => (
+  // Function to handle search input changes
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Filter events based on search query
+  const filteredEvents = events.filter((event) =>
+    event.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const listEvents = filteredEvents.map((event) => (
     <Card key={event.eventId} event={event} />
   ));
 
@@ -12,7 +24,13 @@ export default function Home() {
     <>
       <section className='mt-6 mb-1'>
         <label className='input input-bordered flex items-center gap-2'>
-          <input type='text' className='grow' placeholder='Search' />
+          <input
+            type='text'
+            className='grow'
+            placeholder='Search'
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
           <svg
             xmlns='http://www.w3.org/2000/svg'
             viewBox='0 0 16 16'
