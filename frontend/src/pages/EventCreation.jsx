@@ -1,16 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+
+import { AuthContext } from '../context/AuthContext';
 
 export default function CreateEvent() {
+  const { authToken } = useContext(AuthContext);
+
   // State to manage form inputs
   const [formData, setFormData] = useState({
-    title: '',
+    name: '',
     description: '',
     date: '',
     time: '',
     location: '',
-    organizer: '',
-    contact: '',
   });
+
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   // Handle input change
   const handleChange = (e) => {
@@ -22,15 +28,53 @@ export default function CreateEvent() {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Event Created:', formData);
-    // Add event creation logic (e.g., API call)
+
+    const config = {
+      headers: { Authorization: `Bearer ${authToken}` },
+    };
+
+    await axios.post('http://localhost:8080/api/events', formData, config);
+
+    setToastMessage('Event created successfully!');
+    setShowToast(true);
   };
+
+  // Auto-hide the toast after 3 seconds
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 3000); // 3000 milliseconds = 3 seconds
+
+      // Cleanup timer on component unmount
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
 
   return (
     <div>
       <div className='container mx-auto px-6 py-10'>
+        {/* Toast Notification */}
+        {showToast && (
+          <div className='fixed top-4'>
+            <div className='toast toast-end'>
+              <div
+                className={`alert ${
+                  toastMessage.includes('success')
+                    ? 'alert-success'
+                    : 'alert-error'
+                }`}
+              >
+                <div>
+                  <span>{toastMessage}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <h1 className='text-4xl font-bold text-center mb-10'>
           Create an Event
         </h1>
@@ -39,16 +83,16 @@ export default function CreateEvent() {
           className='max-w-3xl mx-auto bg-base-100 p-8 shadow-lg rounded-lg'
           onSubmit={handleSubmit}
         >
-          {/* Event Title */}
+          {/* Event Name */}
           <div className='mb-6'>
-            <label htmlFor='title' className='block text-lg font-medium mb-2'>
-              Event Title
+            <label htmlFor='name' className='block text-lg font-medium mb-2'>
+              Event Name
             </label>
             <input
               type='text'
-              id='title'
-              name='title'
-              value={formData.title}
+              id='name'
+              name='name'
+              value={formData.name}
               onChange={handleChange}
               className='input input-bordered w-full'
               required
@@ -119,41 +163,6 @@ export default function CreateEvent() {
               id='location'
               name='location'
               value={formData.location}
-              onChange={handleChange}
-              className='input input-bordered w-full'
-              required
-            />
-          </div>
-
-          {/* Organizer Name */}
-          <div className='mb-6'>
-            <label
-              htmlFor='organizer'
-              className='block text-lg font-medium mb-2'
-            >
-              Organizer
-            </label>
-            <input
-              type='text'
-              id='organizer'
-              name='organizer'
-              value={formData.organizer}
-              onChange={handleChange}
-              className='input input-bordered w-full'
-              required
-            />
-          </div>
-
-          {/* Contact Details */}
-          <div className='mb-6'>
-            <label htmlFor='contact' className='block text-lg font-medium mb-2'>
-              Contact Information
-            </label>
-            <input
-              type='email'
-              id='contact'
-              name='contact'
-              value={formData.contact}
               onChange={handleChange}
               className='input input-bordered w-full'
               required

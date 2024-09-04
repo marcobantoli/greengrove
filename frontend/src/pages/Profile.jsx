@@ -1,20 +1,17 @@
+import { useLoaderData, Link } from 'react-router-dom';
+
 export default function Profile() {
+  const profileData = useLoaderData().data;
+
   // Example user data (replace with real data or props)
-  const user = {
-    name: 'John Doe',
-    email: 'johndoe@example.com',
-    bio: 'Nature enthusiast, tree lover, and community organizer.',
-    location: 'Springfield, USA',
-    profileImage: 'https://via.placeholder.com/150', // Placeholder image, replace with real user image
-    upcomingEvents: [
-      {
-        id: 1,
-        title: 'Tree Planting at Green Park',
-        date: 'September 15, 2024',
-      },
-      { id: 2, title: 'River Cleanup Drive', date: 'October 10, 2024' },
-    ],
-  };
+  const upcomingEvents = [
+    {
+      id: 1,
+      title: 'Tree Planting at Green Park',
+      date: 'September 15, 2024',
+    },
+    { id: 2, title: 'River Cleanup Drive', date: 'October 10, 2024' },
+  ];
 
   return (
     <div>
@@ -24,7 +21,9 @@ export default function Profile() {
           {/* Profile Image */}
           <div className='w-32 h-32 mb-6 md:mb-0 md:mr-8 rounded-full overflow-hidden'>
             <img
-              src={user.profileImage}
+              src={
+                profileData.profileImage || 'https://via.placeholder.com/150'
+              }
               alt='Profile'
               className='w-full h-full object-cover'
             />
@@ -32,15 +31,20 @@ export default function Profile() {
 
           {/* User Info */}
           <div className='flex-grow'>
-            <h1 className='text-3xl font-bold'>{user.name}</h1>
-            <p className='text-gray-600 mb-2'>{user.email}</p>
-            <p className='text-gray-700 mb-4'>{user.bio}</p>
-            <p className='text-gray-500'>{user.location}</p>
+            <h1 className='text-3xl font-bold'>{`${profileData.firstName} ${profileData.lastName}`}</h1>
+            <p className='text-gray-600 mb-2'>{profileData.email}</p>
+            <p className='text-gray-700 mb-4'>
+              {profileData.bio ||
+                'Nature enthusiast, tree lover, and community organizer.'}
+            </p>
+            <p className='text-gray-500'>{`${profileData.city}, ${profileData.state}`}</p>
 
             {/* Action Buttons */}
             <div className='mt-6'>
               <button className='btn btn-primary mr-4'>Edit Profile</button>
-              <button className='btn btn-outline'>View My Events</button>
+              <Link to='/events/me' className='btn btn-outline'>
+                View My Events
+              </Link>
             </div>
           </div>
         </div>
@@ -48,9 +52,9 @@ export default function Profile() {
         {/* Upcoming Events */}
         <div className='mt-12'>
           <h2 className='text-2xl font-bold mb-6'>Upcoming Events</h2>
-          {user.upcomingEvents.length > 0 ? (
+          {upcomingEvents.length > 0 ? (
             <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-              {user.upcomingEvents.map((event) => (
+              {upcomingEvents.map((event) => (
                 <div
                   key={event.id}
                   className='bg-base-100 p-6 shadow-md rounded-lg'

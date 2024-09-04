@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.UUID;
 
 import com.example.restservice.user.User;
@@ -31,6 +32,11 @@ public class UserReward {
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date redeemedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.redeemedAt = new Date();
+    }
 
     // Getters and Setters
 }

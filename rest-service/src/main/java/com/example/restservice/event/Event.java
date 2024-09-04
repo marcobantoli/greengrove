@@ -7,7 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.UUID;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import com.example.restservice.user.User;
 import com.example.restservice.organization.Organization;
@@ -29,23 +32,23 @@ public class Event {
     
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
-    private java.util.Date date;
+    private LocalDate date;
     
     @Column(nullable = false)
     @Temporal(TemporalType.TIME)
-    private java.util.Date time;
+    private LocalTime time;
     
     @Column(nullable = false, length = 255)
     private String location;
     
-    @Column(nullable = false, precision = 8, scale = 6)
+    @Column(nullable = true, precision = 8, scale = 6)
     private BigDecimal latitude;
     
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = true, precision = 9, scale = 6)
     private BigDecimal longitude;
     
     @ManyToOne
-    @JoinColumn(name = "organization_id", nullable = false)
+    @JoinColumn(name = "organization_id", nullable = true)
     private Organization organization;
     
     @ManyToOne
@@ -59,6 +62,17 @@ public class Event {
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Date();
+    }
 
     // Getters and Setters
 }

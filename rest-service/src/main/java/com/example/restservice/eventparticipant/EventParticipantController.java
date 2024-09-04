@@ -2,7 +2,13 @@ package com.example.restservice.eventparticipant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.restservice.event.Event;
+import com.example.restservice.user.User;
+import com.example.restservice.user.UserService;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,9 +36,29 @@ public class EventParticipantController {
     }
 
     @PostMapping
-    public ResponseEntity<EventParticipant> createEventParticipant(@RequestBody EventParticipant eventParticipant) {
-        EventParticipant createdEventParticipant = eventParticipantService.createEventParticipant(eventParticipant);
-        return ResponseEntity.ok(createdEventParticipant);
+    public ResponseEntity<EventParticipant> createEventParticipant(@RequestBody EventParticipantRequest request) {
+        EventParticipant eventParticipant = eventParticipantService.createEventParticipant(request.getEventId());
+        return ResponseEntity.ok(eventParticipant);
+    }
+
+    @GetMapping("/my-events")
+    public ResponseEntity<List<Event>> getRegisteredEventsForCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        UUID authenticatedUserId = null;
+
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            User userDetails = (User) authentication.getPrincipal();
+            authenticatedUserId = userDetails.getUserId();
+        }
+        
+        User user = new User();
+        user.setUserId(authenticatedUserId);
+
+        // Fetch events the user is registered for
+        List<Event> registeredEvents = eventParticipantService.getRegisteredEventsByUser(user);
+        
+        return ResponseEntity.ok(registeredEvents);
     }
 
     @PutMapping("/{id}")

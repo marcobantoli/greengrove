@@ -2,7 +2,12 @@ package com.example.restservice.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.restservice.user.User;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +36,19 @@ public class EventController {
 
     @PostMapping
     public Event createEvent(@RequestBody Event event) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        UUID authenticatedUserId = null;
+
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            User userDetails = (User) authentication.getPrincipal();
+            authenticatedUserId = userDetails.getUserId();  // Retrieve userId from CustomUserDetails
+        }
+        
+        User createdBy = new User();
+        createdBy.setUserId(authenticatedUserId);
+
+        event.setCreatedBy(createdBy);
         return eventService.createEvent(event);
     }
 

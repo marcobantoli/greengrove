@@ -1,30 +1,13 @@
-export default function Card() {
-  const event = {
-    id: 1,
-    title: 'Community Tree Planting Drive',
-    date: '2024-08-28',
-    location: 'Greenwood Park, Springfield',
-    description:
-      'Join our community for a tree planting drive at Greenwood Park! Help us plant over 200 saplings and contribute to a greener future. Bring your friends, family, and neighbors for a fun and fulfilling day in nature. All tools and refreshments will be provided.',
-    image:
-      'https://images.unsplash.com/photo-1516684669134-de6b695d3146?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyZWUlMjBwbGFudGluZ3xlbnwwfHx8fDE2OTExNTIzMDA&ixlib=rb-4.0.3&q=80&w=400', // Replace with a relevant event image URL
-    organizer: 'Green Grove Community',
-    contactEmail: 'info@greengrove.org',
-    contactPhone: '+1 (555) 123-4567',
-    participants: 78, // Number of participants already registered
-    maxParticipants: 100, // Maximum number of participants allowed
-    rewards: [
-      { name: 'Eco-Friendly Water Bottle', points: 50 },
-      { name: 'Green Grove T-Shirt', points: 100 },
-    ],
-  };
+import { Link } from 'react-router-dom';
+import placeholderImg from '../assets/placeholder.png';
 
+export default function Card({ event }) {
   return (
     <div className='max-w-sm bg-base-100 shadow-lg rounded-lg overflow-hidden'>
       {/* Event Image */}
       <img
-        src={event.image}
-        alt={event.title}
+        src={event.image || placeholderImg}
+        alt={event.name}
         className='w-full h-48 object-cover'
       />
 
@@ -32,8 +15,8 @@ export default function Card() {
       <div className='p-6'>
         {/* Event Title and Date */}
         <div className='flex justify-between items-center mb-4'>
-          <h2 className='text-2xl font-bold'>{event.title}</h2>
-          <span className='badge badge-outline badge-primary'>
+          <h2 className='text-2xl font-bold'>{event.name}</h2>
+          <span className='text-xs badge badge-outline badge-primary'>
             {event.date}
           </span>
         </div>
@@ -47,7 +30,12 @@ export default function Card() {
         <p className='text-gray-700 mb-6'>{event.description}</p>
 
         {/* Event Actions */}
-        <button className='btn btn-primary w-full'>View Details</button>
+        <Link
+          to={`/events/${event.eventId}`}
+          className='btn btn-primary w-full'
+        >
+          View Details
+        </Link>
       </div>
     </div>
   );

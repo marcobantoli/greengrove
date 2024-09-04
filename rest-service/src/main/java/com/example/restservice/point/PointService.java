@@ -3,6 +3,8 @@ package com.example.restservice.point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.restservice.user.User;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +16,16 @@ public class PointService {
     @Autowired
     public PointService(PointRepository pointRepository) {
         this.pointRepository = pointRepository;
+    }
+
+    // Method to calculate total points for a specific user
+    public int getTotalPointsByUser(User user) {
+        List<Point> points = pointRepository.findByUser(user);
+    
+        // Sum up all points for the user
+        return points.stream()
+                     .mapToInt(Point::getPoints)
+                     .sum();
     }
 
     public List<Point> getAllPoints() {

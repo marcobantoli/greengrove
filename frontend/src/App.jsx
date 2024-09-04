@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import axios from 'axios';
 
 import Root from './components/Root';
 import SignIn from './pages/SignIn';
@@ -33,10 +34,33 @@ const router = createBrowserRouter([
           {
             path: '/',
             element: <Home />,
+            loader: async () => {
+              const config = {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                },
+              };
+              return await axios.get(
+                'http://localhost:8080/api/events',
+                config
+              );
+            },
           },
           {
             path: 'events/:eventId',
             element: <EventDetails />,
+            loader: async ({ params }) => {
+              const config = {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                },
+              };
+
+              return await axios.get(
+                `http://localhost:8080/api/events/${params.eventId}`,
+                config
+              );
+            },
           },
           {
             path: 'events/create',
@@ -53,6 +77,17 @@ const router = createBrowserRouter([
                 <MyEvents />
               </AuthGuard>
             ),
+            loader: async () => {
+              const config = {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                },
+              };
+              return await axios.get(
+                'http://localhost:8080/api/event-participants/my-events',
+                config
+              );
+            },
           },
           {
             path: 'profile',
@@ -61,6 +96,17 @@ const router = createBrowserRouter([
                 <Profile />
               </AuthGuard>
             ),
+            loader: async () => {
+              const config = {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                },
+              };
+              return await axios.get(
+                'http://localhost:8080/api/users/me',
+                config
+              );
+            },
           },
           {
             path: 'rewards',
@@ -69,6 +115,22 @@ const router = createBrowserRouter([
                 <Rewards />
               </AuthGuard>
             ),
+            loader: async () => {
+              const config = {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                },
+              };
+
+              const [userPoints, availableRewards, earnedRewards] =
+                await Promise.all([
+                  axios.get('http://localhost:8080/api/points/total', config),
+                  axios.get('http://localhost:8080/api/rewards', config),
+                  axios.get('http://localhost:8080/api/user-rewards', config),
+                ]);
+
+              return { userPoints, availableRewards, earnedRewards };
+            },
           },
           {
             path: 'about',

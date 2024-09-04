@@ -1,6 +1,13 @@
+import { useLoaderData } from 'react-router-dom';
 import Card from '../components/Card';
 
 export default function Home() {
+  const events = useLoaderData().data;
+
+  const listEvents = events.map((event) => (
+    <Card key={event.eventId} event={event} />
+  ));
+
   return (
     <>
       <section className='mt-6 mb-1'>
@@ -22,12 +29,7 @@ export default function Home() {
       </section>
       <section className='py-3'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {listEvents}
         </div>
       </section>
     </>

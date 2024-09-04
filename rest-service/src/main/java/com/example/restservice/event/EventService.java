@@ -30,27 +30,6 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public List<Event> getEventsForCurrentUser() {
-        // Get the currently authenticated user
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        
-        
-        String email;
-
-        if (principal instanceof UserDetails) {
-            email = ((UserDetails) principal).getUsername();    // This returns email
-        } else {
-            email = principal.toString();
-        }
-
-        // Fetch the User entity from the database based on the username
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Fetch the events the user is participating in
-        return eventParticipantRepository.findAllEventsByUser(user);
-    }
-
     public Event getEventById(UUID id) {
         return eventRepository.findById(id).orElse(null);
     }

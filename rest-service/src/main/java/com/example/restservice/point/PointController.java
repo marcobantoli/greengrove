@@ -2,7 +2,11 @@ package com.example.restservice.point;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.restservice.user.User;
 
 import java.util.List;
 import java.util.UUID;
@@ -45,5 +49,23 @@ public class PointController {
     public ResponseEntity<Void> deletePoint(@PathVariable UUID id) {
         pointService.deletePoint(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/total")
+    public int getTotalPoints() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        UUID authenticatedUserId = null;
+
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            User userDetails = (User) authentication.getPrincipal();
+            authenticatedUserId = userDetails.getUserId();
+        }
+        
+        User user = new User();
+        user.setUserId(authenticatedUserId);
+
+        // Calculate total points
+        return pointService.getTotalPointsByUser(user);
     }
 }

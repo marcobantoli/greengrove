@@ -1,42 +1,23 @@
+import { useLoaderData } from 'react-router-dom';
+import axios from 'axios';
+
 export default function Rewards() {
-  // Example data for earned and available rewards (replace with real data or props)
-  const userPoints = 150; // Example user points
+  const userPoints = useLoaderData().userPoints.data;
+  const availableRewards = useLoaderData().availableRewards.data;
+  const earnedRewards = useLoaderData().earnedRewards.data;
 
-  const earnedRewards = [
-    {
-      id: 1,
-      name: 'Green Grove T-Shirt',
-      description: 'A cool Green Grove branded T-shirt.',
-      points: 100,
-    },
-    {
-      id: 2,
-      name: 'Reusable Water Bottle',
-      description: 'A stylish reusable water bottle.',
-      points: 50,
-    },
-  ];
+  const redeemReward = async (rewardId) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+      },
+    };
 
-  const availableRewards = [
-    {
-      id: 1,
-      name: 'Eco-Friendly Backpack',
-      description: 'A backpack made from recycled materials.',
-      points: 200,
-    },
-    {
-      id: 2,
-      name: 'Tree Planting Kit',
-      description: 'A kit to help you plant trees in your backyard.',
-      points: 150,
-    },
-    {
-      id: 3,
-      name: 'Green Grove Hoodie',
-      description: 'A warm and sustainable hoodie.',
-      points: 300,
-    },
-  ];
+    await axios.post(
+      `http://localhost:8080/user-rewards/redeem/${rewardId}`,
+      config
+    );
+  };
 
   return (
     <div>
@@ -57,13 +38,17 @@ export default function Rewards() {
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
               {earnedRewards.map((reward) => (
                 <div
-                  key={reward.id}
+                  key={reward.reward.rewardId}
                   className='bg-base-100 p-6 shadow-md rounded-lg'
                 >
-                  <h3 className='text-xl font-bold mb-2'>{reward.name}</h3>
-                  <p className='text-gray-600 mb-4'>{reward.description}</p>
+                  <h3 className='text-xl font-bold mb-2'>
+                    {reward.reward.name}
+                  </h3>
+                  <p className='text-gray-600 mb-4'>
+                    {reward.reward.description}
+                  </p>
                   <span className='badge badge-success'>
-                    Earned: {reward.points} Points
+                    Earned: {reward.reward.pointsRequired} Points
                   </span>
                 </div>
               ))}
@@ -95,6 +80,7 @@ export default function Rewards() {
                       userPoints >= reward.points ? '' : 'btn-disabled'
                     }`}
                     disabled={userPoints < reward.points}
+                    onClick={() => redeemReward(reward.id)}
                   >
                     {userPoints >= reward.points
                       ? 'Redeem'

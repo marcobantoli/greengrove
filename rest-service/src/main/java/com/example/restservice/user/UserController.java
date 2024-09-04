@@ -2,7 +2,11 @@ package com.example.restservice.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.restservice.user.UserDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +20,27 @@ public class UserController {
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    // Endpoint to fetch the current user's information
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        UUID authenticatedUserId = null;
+
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            User userDetails = (User) authentication.getPrincipal();
+            authenticatedUserId = userDetails.getUserId();
+        }
+        
+        User user = userService.getUserById(authenticatedUserId);
+
+        if (user == null) {
+            return ResponseEntity.status(404).body(null);
+        }
+
+        return ResponseEntity.ok(new UserDto(user));
     }
 
     @GetMapping
