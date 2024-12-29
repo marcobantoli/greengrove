@@ -68,7 +68,7 @@ jobs:
           java-version: '17'
 
       - name: Build Backend
-        working-directory: backend
+        working-directory: rest-service
         run: ./mvnw package -DskipTests
 
   test:
