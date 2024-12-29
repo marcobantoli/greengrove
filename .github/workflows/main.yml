@@ -1,0 +1,119 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Lint Frontend and Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Node.js setup for the frontend
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm install
+
+      - name: Lint Frontend Code
+        working-directory: frontend
+        run: npm run lint
+
+      # Java setup for the backend
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Lint Backend Code
+        working-directory: backend
+        run: ./mvnw checkstyle:check
+
+  build:
+    name: Build Frontend and Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Build Frontend
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install and Build Frontend
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build
+
+      # Build Backend
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build Backend
+        working-directory: backend
+        run: ./mvnw package -DskipTests
+
+  test:
+    name: Test Frontend and Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Test Frontend
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install and Test Frontend
+        working-directory: frontend
+        run: |
+          npm install
+          npm test -- --watchAll=false
+
+      # Test Backend
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Test Backend
+        working-directory: backend
+        run: ./mvnw test
+
+  docker:
+    name: Docker Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        run: |
+          docker --version
+
+      - name: Build Docker Containers
+        run: docker-compose build
+
+      - name: Run Integration Tests
+        run: docker-compose up --abort-on-container-exit
