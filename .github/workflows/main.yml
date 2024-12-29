@@ -67,6 +67,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Give execute permission to mvnw
+        run: chmod +x ./mvnw
+
       - name: Build Backend
         working-directory: rest-service
         run: ./mvnw package -DskipTests
