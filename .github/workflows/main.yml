@@ -24,7 +24,7 @@ jobs:
 
       - name: Install Frontend Dependencies
         working-directory: frontend
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Lint Frontend Code
         working-directory: frontend
@@ -57,7 +57,7 @@ jobs:
       - name: Install and Build Frontend
         working-directory: frontend
         run: |
-          npm install
+          npm install --legacy-peer-deps
           npm run build
 
       # Build Backend
