@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import placeholderImg from '../assets/placeholder.png';
+import PropTypes from 'prop-types';
 
 export default function Card({ event }) {
   return (
@@ -40,3 +41,14 @@ export default function Card({ event }) {
     </div>
   );
 }
+
+Card.propTypes = {
+  event: PropTypes.shape({
+    image: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    eventId: PropTypes.nuber.isRequired,
+  }).isRequired,
+};

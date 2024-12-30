@@ -6,7 +6,8 @@ export default function About() {
         <div className='text-center mb-12'>
           <h1 className='text-4xl font-bold mb-4'>About Green Grove</h1>
           <p className='text-lg text-gray-700'>
-            Learn more about our mission, values, and the impact we're making.
+            Learn more about our mission, values, and the impact we&apos;re
+            making.
           </p>
         </div>
 

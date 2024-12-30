@@ -24,9 +24,15 @@ describe('Profile Management', () => {
     cy.visit('/profile/edit');
 
     // Update profile information
-    cy.get('input[name="name"]').clear().type('Jane Doe');
-    cy.get('input[name="phone"]').clear().type('987-654-3210');
-    cy.get('button').contains('Save Changes').click();
+    cy.get('input[name="name"]');
+    cy.clear();
+    cy.type('Jane Doe');
+    cy.get('input[name="phone"]');
+    cy.clear();
+    cy.type('987-654-3210');
+    cy.get('button');
+    cy.contains('Save Changes');
+    cy.click();
 
     // Assert that the update was successful
     cy.contains('Profile updated successfully').should('be.visible');
@@ -64,7 +70,9 @@ describe('Profile Management', () => {
     cy.visit('/profile/edit');
 
     // Attempt to update with invalid phone number
-    cy.get('input[name="phone"]').clear().type('invalid-phone');
+    cy.get('input[name="phone"]');
+    cy.clear();
+    cy.type('invalid-phone');
     cy.get('button').contains('Save Changes').click();
 
     // Assert that an error message is shown

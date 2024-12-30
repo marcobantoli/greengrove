@@ -50,15 +50,33 @@ describe('Event Management', () => {
     cy.get('button').contains('Edit Event').click();
 
     // Update event details
-    cy.get('input[name="name"]').clear().type('Updated Event');
-    cy.get('input[name="date"]').clear().type('2024-09-20');
-    cy.get('input[name="time"]').clear().type('11:00');
-    cy.get('input[name="location"]').clear().type('New Park');
-    cy.get('textarea[name="description"]')
-      .clear()
-      .type('Updated event description.');
-    cy.get('input[name="maxParticipants"]').clear().type('75');
-    cy.get('button').contains('Update Event').click();
+    cy.get('input[name="name"]');
+    cy.clear();
+    cy.type('Updated Event');
+
+    cy.get('input[name="date"]');
+    cy.clear();
+    cy.type('2024-09-20');
+
+    cy.get('input[name="time"]');
+    cy.clear();
+    cy.type('11:00');
+
+    cy.get('input[name="location"]');
+    cy.clear();
+    cy.type('New Park');
+
+    cy.get('textarea[name="description"]');
+    cy.clear();
+    cy.type('Updated event description.');
+
+    cy.get('input[name="maxParticipants"]');
+    cy.clear();
+    cy.type('75');
+
+    cy.get('button');
+    cy.contains('Update Event');
+    cy.click();
 
     // Assert that the event was updated successfully
     cy.contains('Event updated successfully').should('be.visible');

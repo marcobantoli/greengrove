@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import PropTypes from 'prop-types';
 
 export default function AuthGuard({ children }) {
   const { authToken } = useContext(AuthContext);
@@ -20,3 +21,7 @@ export default function AuthGuard({ children }) {
   // If authenticated, render the protected component
   return children;
 }
+
+AuthGuard.propTypes = {
+  children: PropTypes.node,
+};

@@ -71,9 +71,9 @@ describe('Feedback System', () => {
   it('should allow a participant to update their feedback', () => {
     // Update existing feedback
     cy.visit('/events/1/feedback');
-    cy.get('textarea[name="feedbackText"]')
-      .clear()
-      .type('Updated feedback text.');
+    cy.get('textarea[name="feedbackText"]');
+    cy.clear();
+    cy.type('Updated feedback text.');
     cy.get('select[name="rating"]').select('4');
     cy.get('button').contains('Update Feedback').click();
 
