@@ -39,7 +39,7 @@ jobs:
 
       - name: Lint Backend Code
         working-directory: rest-service
-        run: ./mvnw checkstyle:check
+        run: mvn checkstyle:check
 
   build:
     name: Build Frontend and Backend
