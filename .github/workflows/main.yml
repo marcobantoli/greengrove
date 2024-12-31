@@ -104,6 +104,22 @@ jobs:
   docker:
     name: Docker Build and Test
     runs-on: ubuntu-latest
+    env:
+      SERVER_PORT: ${{ secrets.SERVER_PORT }}
+      REACT_LOCAL_PORT: ${{ secrets.REACT_LOCAL_PORT }}
+      REACT_DOCKER_PORT: ${{ secrets.REACT_DOCKER_PORT }}
+      SPRING_LOCAL_PORT: ${{ secrets.SPRING_LOCAL_PORT }}
+      SPRING_DOCKER_PORT: ${{ secrets.SPRING_DOCKER_PORT }}
+      MYSQL_URL: ${{ secrets.MYSQL_URL }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      JWT_SECURITYKEY: ${{ secrets.JWT_SECURITYKEY }}
+      JWT_EXPIRATIONTIME: ${{ secrets.JWT_EXPIRATIONTIME }}
+      MYSQLDB_LOCAL_PORT: ${{ secrets.MYSQLDB_LOCAL_PORT }}
+      MYSQLDB_DOCKER_PORT: ${{ secrets.MYSQLDB_DOCKER_PORT }}
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      MYSQL_ALLOW_EMPTY_PASSWORD: ${{ secrets.MYSQL_ALLOW_EMPTY_PASSWORD }}
+      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
