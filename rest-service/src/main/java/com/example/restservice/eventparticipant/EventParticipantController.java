@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.restservice.event.Event;
 import com.example.restservice.user.User;
-import com.example.restservice.user.UserService;
 
 import java.util.List;
 import java.util.UUID;
