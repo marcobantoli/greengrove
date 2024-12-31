@@ -87,7 +87,7 @@ jobs:
       - name: Install and Test Frontend
         working-directory: frontend
         run: |
-          npm install
+          npm install --legacy-peer-deps
           npm test -- --watchAll=false
 
       # Test Backend
