@@ -38,7 +38,7 @@ jobs:
           java-version: '17'
 
       - name: Lint Backend Code
-        working-directory: backend
+        working-directory: rest-service
         run: ./mvnw checkstyle:check
 
   build:
