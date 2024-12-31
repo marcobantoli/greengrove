@@ -38,8 +38,8 @@ jobs:
           java-version: '17'
 
       - name: Lint Backend Code
-        working-directory: backend
-        run: ./mvnw checkstyle:check
+        working-directory: rest-service
+        run: mvn checkstyle:check
 
   build:
     name: Build Frontend and Backend
@@ -108,12 +108,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
       - name: Set up Docker
         run: |
           docker --version
 
       - name: Build Docker Containers
-        run: docker-compose build
+        run: docker-compose -f docker-compose-dev.yml build
 
       - name: Run Integration Tests
-        run: docker-compose up --abort-on-container-exit
+        run: docker-compose -f docker-compose-dev.yml up --abort-on-container-exit
