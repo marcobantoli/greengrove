@@ -98,7 +98,7 @@ jobs:
           java-version: '17'
 
       - name: Test Backend
-        working-directory: backend
+        working-directory: rest-service
         run: ./mvnw test
 
   docker:
