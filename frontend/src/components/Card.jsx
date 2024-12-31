@@ -49,6 +49,6 @@ Card.propTypes = {
     date: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    eventId: PropTypes.nuber.isRequired,
+    eventId: PropTypes.number.isRequired,
   }).isRequired,
 };
