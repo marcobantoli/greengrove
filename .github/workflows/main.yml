@@ -99,7 +99,7 @@ jobs:
 
       - name: Test Backend
         working-directory: rest-service
-        run: ./mvnw test
+        run: mvn test
 
   docker:
     name: Docker Build and Test
